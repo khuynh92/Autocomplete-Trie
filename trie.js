@@ -27,8 +27,35 @@
  *   stored in a Trie structure that is compatible with check()
  */
 const create = dictionary => {
+let trie = {
+  value: null,
+  children: {},
+}
 
-  return {};
+let wordsArray = Object.keys(dictionary)
+
+let currentObj = trie;
+
+wordsArray.forEach(word => {
+  for( let i = 0; i < word.length; i++) {
+    let letter = word[i]
+    if(!currentObj.children[letter]) {
+    let newObj = {
+      value: null,
+      children: {}
+    }
+    currentObj.children[letter] = newObj
+    currentObj = currentObj.children[letter]
+  } else {
+    currentObj = currentObj.children[letter]
+  }
+}
+  
+  currentObj.value = dictionary[word]
+  currentObj = trie
+})
+
+return trie
 }
 
 /*
@@ -62,10 +89,23 @@ const create = dictionary => {
  *   false
  *
  */
-const check = ( trie, query ) => {
 
-  return {};
+check = (trie, query) => {
+  let currentObj = trie;
+
+  for(let i = 0; i < query.length; i++) {
+    let letter = query[i]
+    if(currentObj.children[letter]) {
+      currentObj = currentObj.children[letter]
+    } else {
+      return false
+    }
+  }
+  if (currentObj.value) return currentObj.value
+
+  if (currentObj.children) return true
 }
+
 
 module.exports = {
   create,
